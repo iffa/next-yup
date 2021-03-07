@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { SchemaOf, ValidationError } from 'yup';
+import { BaseSchema, ValidationError } from 'yup';
 
 async function validation(
-  schema: SchemaOf<Record<string, any>>,
+  schema: BaseSchema,
   data: Record<string, any> | null,
   cast: boolean
 ): Promise<{ result?: Record<string, any>; valid: boolean; errors: string[] }> {
@@ -27,7 +27,7 @@ export type ValidationRequestFields = Pick<
 >;
 
 export type ValidationSchemas = {
-  [K in keyof ValidationRequestFields]?: SchemaOf<Record<string, any>>;
+  [K in keyof ValidationRequestFields]?: BaseSchema;
 };
 
 export type ValidationResults = {
@@ -37,14 +37,30 @@ export type ValidationResults = {
 export type ValidationFunctionHandler<T = any> = (
   req: NextApiRequest,
   res: NextApiResponse<T>,
+  /**
+   * Contains validated data. If cast was set to true, values have been cast
+   * to match their expected type (e.g. "true" -> true boolean)
+   */
   data: ValidationResults
 ) => void | Promise<void>;
 
 export type ValidationFunction = (
+  /**
+   * Schemas to validate
+   */
   schemas: ValidationSchemas,
+  /**
+   * Request handler that is called if validation succeeds
+   */
   handler: ValidationFunctionHandler
 ) => ValidationFunctionHandler;
 
+/**
+ * Wrap your Next.js API route with this function to utilize Yup validation for
+ * request body, query and headers.
+ * @param cast If true, "data" object returned will have cast values
+ * @returns {ValidationFunction}
+ */
 export default function withYup(cast = true): ValidationFunction {
   return (schemas, handler) => {
     return async (req: NextApiRequest, res: NextApiResponse) => {
