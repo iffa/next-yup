@@ -21,7 +21,7 @@
   },
   "peerDependencies": {
     "next": ">=10",
-    "react": ">=16"
+    "yup": "^0.32.9"
   },
   "husky": {
     "hooks": {
