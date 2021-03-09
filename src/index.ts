@@ -1,25 +1,5 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { BaseSchema, ValidationError } from 'yup';
-
-async function validation(
-  schema: BaseSchema,
-  data: Record<string, any> | null,
-  cast: boolean
-): Promise<{ result?: Record<string, any>; valid: boolean; errors: string[] }> {
-  return schema
-    .validate(data)
-    .then(result => {
-      if (cast) {
-        return { result: schema.cast(data), valid: true, errors: [] };
-      }
-      return { result, valid: true, errors: [] };
-    })
-    .catch((err: ValidationError) => ({
-      result: {},
-      valid: false,
-      errors: err.errors,
-    }));
-}
 
 export type ValidationRequestFields = Pick<
   NextApiRequest,
@@ -34,15 +14,11 @@ export type ValidationResults = {
   [K in keyof ValidationRequestFields]?: Record<string, any>;
 };
 
-export type ValidationFunctionHandler<T = any> = (
-  req: NextApiRequest,
-  res: NextApiResponse<T>,
-  /**
-   * Contains validated data. If cast was set to true, values have been cast
-   * to match their expected type (e.g. "true" -> true boolean)
-   */
-  data: ValidationResults
-) => void | Promise<void>;
+type ValidationFunctionHandler<T = any> = NextApiHandler extends (
+  ...a: any[]
+) => infer R
+  ? (...a: [...U: Parameters<NextApiHandler<T>>, data: ValidationResults]) => R
+  : never;
 
 export type ValidationFunction = (
   /**
@@ -53,7 +29,27 @@ export type ValidationFunction = (
    * Request handler that is called if validation succeeds
    */
   handler: ValidationFunctionHandler
-) => ValidationFunctionHandler;
+) => NextApiHandler<any>;
+
+async function validation(
+  schema: BaseSchema,
+  data: Record<string, any> | null,
+  cast: boolean
+): Promise<{ result?: Record<string, any>; valid: boolean; errors: string[] }> {
+  return schema
+    .validate(data)
+    .then((result) => {
+      if (cast) {
+        return { result: schema.cast(data), valid: true, errors: [] };
+      }
+      return { result, valid: true, errors: [] };
+    })
+    .catch((err: ValidationError) => ({
+      result: {},
+      valid: false,
+      errors: err.errors,
+    }));
+}
 
 /**
  * Wrap your Next.js API route with this function to utilize Yup validation for
@@ -87,8 +83,6 @@ export default function withYup(cast = true): ValidationFunction {
       if (validationErrors.length > 0) {
         return res.status(400).json(validationErrors);
       }
-
-      console.log(data);
 
       return handler(req, res, data);
     };
