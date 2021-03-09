@@ -16,7 +16,7 @@ describe('withYup', () => {
     it('passes validation and casts properly', async () => {
       await testApiHandler({
         handler,
-        requestPatcher: req =>
+        requestPatcher: (req) =>
           (req.url = '/api/query?name=John Doe&isAlive=true'),
         test: async ({ fetch }) => {
           const res = await fetch({ method: 'GET' });
@@ -29,7 +29,7 @@ describe('withYup', () => {
     it('returns HTTP 400 for invalid data', async () => {
       await testApiHandler({
         handler,
-        requestPatcher: req => (req.url = '/api/query?invalid=goat'),
+        requestPatcher: (req) => (req.url = '/api/query?invalid=goat'),
         test: async ({ fetch }) => {
           const res = await fetch({ method: 'GET' });
           expect(res.status).toEqual(400);
@@ -46,7 +46,7 @@ describe('withYup', () => {
     it('passes validation for headers and casts properly', async () => {
       await testApiHandler({
         handler,
-        requestPatcher: req =>
+        requestPatcher: (req) =>
           (req.headers = { name: 'John Doe', isAlive: 'true' }),
         test: async ({ fetch }) => {
           const res = await fetch({ method: 'GET' });
@@ -59,7 +59,7 @@ describe('withYup', () => {
     it('returns HTTP 400 for invalid data', async () => {
       await testApiHandler({
         handler,
-        requestPatcher: req => (req.headers = { invalid: 'goat' }),
+        requestPatcher: (req) => (req.headers = { invalid: 'goat' }),
         test: async ({ fetch }) => {
           const res = await fetch({ method: 'GET' });
           expect(res.status).toEqual(400);

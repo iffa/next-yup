@@ -14,7 +14,11 @@ export type ValidationResults = {
   [K in keyof ValidationRequestFields]?: Record<string, any>;
 };
 
-type ValidationFunctionHandler<T = any> = NextApiHandler extends (...a: any[]) => infer R ? (...a:[...U: Parameters<NextApiHandler<T>>, data: ValidationResults]) => R: never;
+type ValidationFunctionHandler<T = any> = NextApiHandler extends (
+  ...a: any[]
+) => infer R
+  ? (...a: [...U: Parameters<NextApiHandler<T>>, data: ValidationResults]) => R
+  : never;
 
 export type ValidationFunction = (
   /**
@@ -34,7 +38,7 @@ async function validation(
 ): Promise<{ result?: Record<string, any>; valid: boolean; errors: string[] }> {
   return schema
     .validate(data)
-    .then(result => {
+    .then((result) => {
       if (cast) {
         return { result: schema.cast(data), valid: true, errors: [] };
       }
