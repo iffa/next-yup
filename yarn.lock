@@ -6127,10 +6127,10 @@ neo-async@^2.5.0, neo-async@^2.6.1:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-next-test-api-route-handler@1.2.23:
-  version "1.2.23"
-  resolved "https://registry.yarnpkg.com/next-test-api-route-handler/-/next-test-api-route-handler-1.2.23.tgz#82e75d12e362a9cd51141e5d328a5dfb87c729e1"
-  integrity sha512-I3vRGKe6owD/Bm3sDSONJARDCSf9oYlj7GQh4HuIg1N7mJPVol485E5xeqRIpWRM/weyLVe2JnWB6niC+8rquQ==
+next-test-api-route-handler@1.2.24:
+  version "1.2.24"
+  resolved "https://registry.yarnpkg.com/next-test-api-route-handler/-/next-test-api-route-handler-1.2.24.tgz#619ca3177ec75b54179786f3b67329fba2a71b0a"
+  integrity sha512-X2JXE2PFuJRsjQp0bOaALIdgye6Ysm/nHvRCXI88Fi0Vbx5ZLZBkTq5/f4XrQHfAY7dJW8Tg3/esb2YzFzDiHw==
   dependencies:
     debug "^4.3.1"
     isomorphic-unfetch "^3.1.0"
