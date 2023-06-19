@@ -48,7 +48,7 @@
     }
   ],
   "resolutions": {
-    "**/typescript": "4.2.3",
+    "**/typescript": "4.9.5",
     "**/@typescript-eslint/eslint-plugin": "4.18.0",
     "**/@typescript-eslint/parser": "4.18.0",
     "**/jest": "26.6.3",
@@ -67,7 +67,7 @@
     "size-limit": "4.10.1",
     "tsdx": "0.14.1",
     "tslib": "2.1.0",
-    "typescript": "4.2.3",
+    "typescript": "4.9.5",
     "yup": "0.32.9"
   }
 }
